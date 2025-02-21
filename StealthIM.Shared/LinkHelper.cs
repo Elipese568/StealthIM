@@ -34,9 +34,15 @@ public class LinkHelper
         [RequestCommandType.ChangePassword] = Type.Missing.GetType()
     };
 
+#if LITTLE_ENDIEN_DEBUGGER
+    private static readonly bool _little_endien_send = true;
+#else
+    private static readonly bool _little_endien_send = false;
+#endif
+
     public static byte[] GetNetworkByteArray(byte[] orig)
     {
-        if (BitConverter.IsLittleEndian)
+        if (BitConverter.IsLittleEndian && !_little_endien_send)
         {
             byte[] data = new byte[orig.Length];
             orig.CopyTo(data, 0);
@@ -48,7 +54,7 @@ public class LinkHelper
 
     public static byte[] GetHostByteArray(byte[] network)
     {
-        if (BitConverter.IsLittleEndian)
+        if (BitConverter.IsLittleEndian && !_little_endien_send)
         {
             byte[] data = new byte[network.Length];
             network.CopyTo(data, 0);
